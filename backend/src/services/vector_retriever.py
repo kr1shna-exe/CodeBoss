@@ -105,7 +105,7 @@ class VectorRetriever:
             context_parts.append("\n## Source Code:")
             for file_data in import_files:
                 context_parts.append(f"- {file_data.get('file_path', 'N/A')}")
-                source_preview = file_data.get("source_code", "")[:200]
+                source_preview = file_data.get("source_code", "")
                 context_parts.append(f"  ```python\n{source_preview}...\n```")
 
         return "\n".join(context_parts)

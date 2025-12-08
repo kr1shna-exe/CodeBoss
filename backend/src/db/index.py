@@ -13,7 +13,7 @@ COLLECTIONS = {
         "vector_size": VECTOR_SIZE,
     },
     "learnings": {
-        "description": "Learnings from the pr commints & comments along with user feedback",
+        "description": "Learnings from the pr commits & comments along with user feedback",
         "vector_size": VECTOR_SIZE,
     },
 }

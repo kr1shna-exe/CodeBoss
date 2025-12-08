@@ -1,15 +1,16 @@
 import hashlib
 import hmac
 import json
+from pathlib import Path
 from typing import Any, Dict, Optional, cast
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Request
 from utils.github_bot import InlineComment
-from ai.multi_agent_reviewer import review_code_with_multi_agents
+from graph.multi_agent_reviewer import review_code_with_multi_agents
 from db.vector_indexer import VectorIndexer
 from git_ops.repo_manager import RepoManager
 from services.history_fetcher import HistoryFetcher
-from services.simple_ast_parser import SimpleASTParser
+from services.simple_ast_parser import LANGUAGE_MAP, SimpleASTParser
 from services.simple_context_builder import SimpleContextBuilder
 from services.simple_semantics import build_simple_graph
 from utils.config import settings
@@ -72,35 +73,44 @@ async def process_webhook_background(
             repo_path=repo_path, base_branch=base_branch, head_branch=head_branch
         )
 
-        parser = SimpleASTParser(language="python")
         for file_path in diff_data.get("diff_files", []):
-            if file_path.endswith(".py"):
-                try:
-                    full_path = f"{repo_path}/{file_path}"
+            # Detect language from file extension
+            file_ext = Path(file_path).suffix.lower()
+            language = LANGUAGE_MAP.get(file_ext)
 
-                    with open(full_path, "r", encoding="utf-8") as f:
-                        source_code = f.read()
+            # Skip unsupported file types
+            if not language:
+                print(f"Skipping unsupported file type: {file_path}")
+                continue
 
-                    tree = parser.parse_file(full_path)
+            try:
+                full_path = f"{repo_path}/{file_path}"
 
-                    graph = build_simple_graph(
-                        tree[0], source_code, "python", file_path
-                    )
-                    vector_indexer.index_code_graph(
-                        file_path=file_path,
-                        graph=graph,
-                    )
+                with open(full_path, "r", encoding="utf-8") as f:
+                    source_code = f.read()
 
-                    imports = parser.extract_imports(tree[0], source_code)
-                    vector_indexer.index_import_file(
-                        file_path=file_path,
-                        source_code=source_code,
-                        imports=imports,
-                    )
+                # Create parser for the detected language
+                parser = SimpleASTParser(language=language)
+                tree = parser.parse_file(full_path)
 
-                except Exception as e:
-                    print(f"Error processing file {file_path}: {e}")
-                    continue
+                graph = build_simple_graph(
+                    tree[0], source_code, language, file_path
+                )
+                vector_indexer.index_code_graph(
+                    file_path=file_path,
+                    graph=graph,
+                )
+
+                imports = parser.extract_imports(tree[0], source_code)
+                vector_indexer.index_import_file(
+                    file_path=file_path,
+                    source_code=source_code,
+                    imports=imports,
+                )
+
+            except Exception as e:
+                print(f"Error processing file {file_path}: {e}")
+                continue
 
         try:
             history_fetcher = HistoryFetcher()

@@ -16,7 +16,7 @@ class AIClient:
         """Initialize the appropriate AI client based on provider"""
         if self.provider == "gemini":
             genai.configure(api_key=settings.gemini_api_key)
-            self.model_name = "gemini-2.0-flash-exp"
+            self.model_name = "gemini-2.5-flash"
         elif self.provider == "groq":
             self.client = Groq(api_key=settings.groq_api_key)
             self.model_name = "llama-3.3-70b-versatile"  # Fast and capable
