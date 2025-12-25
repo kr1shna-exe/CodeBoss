@@ -4,6 +4,7 @@ import {
   TopStarEffect,
 } from "../Effects/BackgroundGradients";
 import { LineEffect } from "../Effects/Design";
+
 export default function About() {
   return (
     <div
@@ -143,7 +144,7 @@ export default function About() {
                   <p className="text-white font-light font-'Montserrat' text-base sm:text-lg lg:text-xl leading-relaxed">
                     Interact directly in PR comments. Ask questions about
                     changes, provide feedback on review and watch it learn your
-                    team’s preferences. Every interaction improves future
+                    team's preferences. Every interaction improves future
                     reviews across your repositories
                   </p>
                 </div>

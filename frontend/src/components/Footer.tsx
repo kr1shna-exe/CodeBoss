@@ -2,6 +2,7 @@
 import { Arrow, Github, LinkedIn, X } from "@/Effects/Icons";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+
 export default function Footer() {
   const [installationUrl, setInstallationUrl] = useState<string>("");
 
@@ -11,7 +12,8 @@ export default function Footer() {
     fetch(`${backendUrl}/api/github-app-info`)
       .then((res) => res.json())
       .then((data) => setInstallationUrl(data.installation_url));
-  });
+  }, []);
+
   return (
     <footer className="relative w-full">
       <div className="relative bg-gradient-to-b from-[#073d3d33] to-[#00000033] rounded-[30px] py-1 -mx-4">
@@ -55,7 +57,7 @@ export default function Footer() {
                         if (!installationUrl) e.preventDefault();
                       }}
                     >
-                      <button className="px-6 py-4 cursor-pointer bg-white rounded-4xl shadow-[inset_0px_12px_8px_0px_rgba(174,203,192,1)] flex items-center gap-6  transition-transform">
+                      <button className="px-6 py-4 cursor-pointer bg-white rounded-4xl shadow-[inset_0px_12px_8px_0px_rgba(174,203,192,1)] flex items-center gap-6 hover:scale-105 transition-transform">
                         <span className="text-black text-lg font-'Montserrat' font-medium">
                           Start Now
                         </span>

@@ -25,6 +25,24 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.scroll-snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.scroll-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+.scroll-snap-section-auto {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 .border-glow-sharp {
   position: relative;
   overflow: hidden;

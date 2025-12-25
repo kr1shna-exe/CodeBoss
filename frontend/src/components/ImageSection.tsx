@@ -1,25 +1,45 @@
+"use client";
+
 import Image from "next/image";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Eclipse } from "@/Effects/BackgroundGradients";
 import { LeftDesign, RightDesign } from "@/Effects/Design";
 import { LeftShade, RightShade } from "@/Effects/Shades";
 
 export default function ImageSection() {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
   return (
-    <div className="flex flex-col py-16 w-full sm:mb-40 sm:mt-10 justify-center items-center">
+    <div
+      ref={sectionRef}
+      className="flex flex-col py-16 w-full sm:mb-40 sm:mt-10 justify-center items-center"
+    >
       <div className="relative flex items-center justify-center w-full max-w-7xl">
         <div className="absolute scale-35 md:hidden lg:block -left-50 top-22 lg:-left-30 2xl:-left-35 lg:top-55 lg:transform -translate-y-1/2 z-10 lg:scale-95 2xl:scale-120">
           <LeftDesign />
         </div>
-        <div className="absolute -left-44 -bottom-80 scale-20 sm:scale-40 sm:-left-30 sm:-bottom-80 md:-left-40 md:-bottom-140 2xl:-left-50 md:top-50 z-35 md:scale-75 2xl:scale-90 opacity-90">
+        <motion.div
+          className="absolute -left-44 -bottom-80 scale-20 sm:scale-40 sm:-left-30 sm:-bottom-80 md:-left-40 md:-bottom-140 2xl:-left-50 md:top-50 z-35 md:scale-75 2xl:scale-90"
+          initial={{ x: -150, opacity: 0 }}
+          animate={isInView ? { x: 0, opacity: 0.9 } : { x: -150, opacity: 0 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
           <LeftShade />
-        </div>
+        </motion.div>
         <div className="absolute scale-35 md:hidden lg:block -right-45 top-30 lg:-right-31 2xl:-right-40 lg:top-55 lg:transform -translate-y-1/2 z-10 lg:scale-85 2xl:scale-110">
           <RightDesign />
         </div>
-        <div className="absolute -right-44 -bottom-80 scale-20  sm:scale-40 sm:-right-30 sm:-bottom-80 md:-right-40 md:scale-75 2xl:-right-50 z-35 2xl:scale-90 opacity-90">
+        <motion.div
+          className="absolute -right-44 -bottom-80 scale-20  sm:scale-40 sm:-right-30 sm:-bottom-80 md:-right-40 md:scale-75 2xl:-right-50 z-35 2xl:scale-90"
+          initial={{ x: 150, opacity: 0 }}
+          animate={isInView ? { x: 0, opacity: 0.9 } : { x: 150, opacity: 0 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
           <RightShade />
-        </div>
-        <div className="relative z-20 pb-10 sm:pb-0 sm:w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl  pl-2 pr-2 md:px-2 bg-gradient-to-l from-[#999999]/8 from-80% via-black via-90% to-[#999999]/8 to-100% rounded-tl-[38.66px] rounded-tr-[38.66px] rounded-bl-[77.32px] rounded-br-[77.32px] ">
+        </motion.div>
+        <div className="relative z-20 pb-10 sm:pb-0 sm:w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl  pl-2 pr-2 md:px-2 bg-gradient-to-l from-[#999999]/8 from-80% via-black via-90% to-[#999999]/8 to-100% rounded-tl-[38.66px] rounded-tr-[38.66px] rounded-bl-[77.32px] rounded-br-[77.32px]">
           <div
             className="absolute hidden md:block left-0 bottom-0 right-0 top-0 pointer-events-none z-20 rounded-tl-[38.66px] rounded-tr-[38.66px]"
             style={{

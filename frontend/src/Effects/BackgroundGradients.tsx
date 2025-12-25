@@ -1,13 +1,20 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export function BackgroundGradients() {
   return (
     <div className="absolute inset-0 z-1 overflow-hidden">
-      <svg
+      <motion.svg
         width="984"
         height="612"
         viewBox="0 0 984 612"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="absolute -top-54 md:-top-24 left-0 w-1/2 h-2/3"
+        initial={{ x: -200, y: -150, opacity: 0 }}
+        animate={{ x: 0, y: 0, opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <g filter="url(#filter0_f_81_179)">
           <path
@@ -71,14 +78,17 @@ export function BackgroundGradients() {
             />
           </filter>
         </defs>
-      </svg>
-      <svg
+      </motion.svg>
+      <motion.svg
         width="984"
         height="612"
         viewBox="0 0 984 612"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="absolute -top-54 md:-top-24 right-0 w-1/2 h-2/3"
+        initial={{ x: 200, y: -150, opacity: 0 }}
+        animate={{ x: 0, y: 0, opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
       >
         <g transform="scale(-1,1) translate(-984,0)">
           <g filter="url(#filter0_f_81_179_right)">
@@ -144,7 +154,7 @@ export function BackgroundGradients() {
             />
           </filter>
         </defs>
-      </svg>
+      </motion.svg>
     </div>
   );
 }
