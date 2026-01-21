@@ -128,14 +128,11 @@ async def aggregator_agent(state: dict) -> dict:
         all_issues = security_issues + code_quality_issues + performance_issues
 
         summary, inline_comments_data = build_review_with_inline_comments(
-            security_analysis,
             code_quality_analysis,
-            performance_analysis,
             security_issues,
             performance_issues,
             code_quality_issues,
             failed_agents,
-            state.get("pr_title", ""),
         )
 
         return {
@@ -154,14 +151,11 @@ async def aggregator_agent(state: dict) -> dict:
 
 
 def build_review_with_inline_comments(
-    security_analysis: str,
     code_quality_analysis: str,
-    performance_analysis: str,
     security_issues: List[ParsedIssue],
     performance_issues: List[ParsedIssue],
     code_quality_issues: List[ParsedIssue],
     failed_agents: List[str],
-    pr_title: str,
 ) -> tuple[str, List[Dict]]:
     """Build summary review with code suggestions consolidated in one section"""
 
@@ -174,14 +168,11 @@ def build_review_with_inline_comments(
 
     # Build summary with code suggestions inside
     summary = build_summary_review(
-        security_analysis,
         code_quality_analysis,
-        performance_analysis,
         security_issues,
         performance_issues,
         issues_by_file,
         failed_agents,
-        pr_title,
     )
 
     # Return empty inline comments - everything goes in the summary
@@ -275,14 +266,11 @@ def build_severity_grouped_section(issues: List[ParsedIssue], section_type: str)
 
 
 def build_summary_review(
-    security_analysis: str,
     code_quality_analysis: str,
-    performance_analysis: str,
     security_issues: List[ParsedIssue],
     performance_issues: List[ParsedIssue],
     issues_by_file: Dict[str, List[ParsedIssue]],
     failed_agents: List[str],
-    pr_title: str,
 ) -> str:
     """Build high-level summary review with collapsible sections"""
     review_parts = []

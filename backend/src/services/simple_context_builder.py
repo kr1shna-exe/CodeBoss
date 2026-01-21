@@ -63,18 +63,12 @@ class SimpleContextBuilder:
                 # Extract graph insights for AI
                 graph_insights = self._extract_graph_insights(graph)
 
-                # Resolve cross-file dependencies
-                cross_file_deps = self._resolve_simple_dependencies(
-                    semantic_analysis, repo_path, file_path
-                )
-
                 # Add to context
                 context_parts.append(
                     self._build_file_analysis(
                         file_path,
                         diff_data,
                         semantic_analysis,
-                        cross_file_deps,
                         graph_insights,
                     )
                 )
@@ -99,9 +93,6 @@ class SimpleContextBuilder:
         all_dependencies = self._collect_all_dependencies(changed_files, repo_path)
         if all_dependencies:
             context_parts.append(self._build_dependencies_section(all_dependencies))
-
-        # Summary
-        context_parts.append(self._build_summary(diff_data, pr_history))
 
         return "\n\n".join(context_parts)
 
@@ -153,7 +144,6 @@ class SimpleContextBuilder:
         file_path: str,
         diff_data: Dict[str, Any],
         semantic_analysis: Dict[str, Any],
-        cross_file_deps: Dict[str, Any],
         graph_insights: Dict[str, Any],
     ) -> str:
         """Build analysis for a single file."""
@@ -251,7 +241,7 @@ class SimpleContextBuilder:
         return insights
 
     def _resolve_simple_dependencies(
-        self, semantic_analysis: Dict[str, Any], repo_path: str, current_file: str
+        self, semantic_analysis: Dict[str, Any], repo_path: str
     ) -> Dict[str, Any]:
         imports = semantic_analysis.get("imports", [])
         dependencies = []
@@ -270,7 +260,7 @@ class SimpleContextBuilder:
                 full_path = Path(repo_path) / potential_path
 
                 if full_path.exists():
-                    # Read the source code
+                   # Read the source code
                     try:
                         with open(full_path, "r", encoding="utf-8") as f:
                             source_code = f.read()
@@ -309,7 +299,7 @@ class SimpleContextBuilder:
                 )
 
                 cross_file_deps = self._resolve_simple_dependencies(
-                    semantic_analysis, repo_path, file_path
+                    semantic_analysis, repo_path
                 )
 
                 deps_found = cross_file_deps.get("dependencies", [])

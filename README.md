@@ -140,7 +140,7 @@ POST /api/webhook
 ### 3. AST Parsing & Indexing
 
 ```python
-# For each changed .py file:
+# For each changed file:
 tree = parser.parse_file(file_path)
 graph = build_simple_graph(tree, source_code, language, file_path)
 

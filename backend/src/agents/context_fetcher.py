@@ -20,11 +20,6 @@ async def context_fetcher_agent(state: dict) -> dict:
         )
 
         return {
-            "vector_context": {
-                "code_graphs": code_graphs,
-                "import_files": import_files,
-                "learnings": learnings,
-            },
             "code_graphs": code_graphs,
             "import_files": import_files,
             "learnings": learnings,
