@@ -1,11 +1,14 @@
 import hashlib
 import shutil
 from pathlib import Path
-
+import time
 from git import Repo
 
 
 class RepoManager:
+    _last_cleanup_time: float = 0
+    _cleanup_interval_seconds: int = 86400
+    
     def __init__(self, temp_dir: str):
         self.temp_dir = Path(temp_dir)
         self.temp_dir.mkdir(exist_ok=True)
@@ -75,9 +78,33 @@ class RepoManager:
 
         return {"full_diff": diff, "diff_files": normalized_files}
 
-    def get_file_content(self, repo_path: Path, branch: str, file_path: str):
-        repo = Repo(repo_path)
-        return repo.git.show(f"origin/{branch}:{file_path}")
+    # def get_file_content(self, repo_path: Path, branch: str, file_path: str):
+    #     repo = Repo(repo_path)
+    #     return repo.git.show(f"origin/{branch}:{file_path}")
+
+    def cleanup_old_repos(self, retention_days: int = 7):
+        current_time = time.time()
+        time_since_last_cleanup = current_time - RepoManager._last_cleanup_time
+        if (time_since_last_cleanup < RepoManager._cleanup_interval_seconds):
+            print("Skipping cleanup")
+            return
+        print("Starting cleanup")
+        retention_seconds = retention_days * 86400
+        if not self.temp_dir.exists():
+            RepoManager._last_cleanup_time = current_time
+            return
+        for item in self.temp_dir.iterdir():
+            if item.is_dir():
+                try:
+                    mtime = item.stat().st_mtime
+                    age_seconds = current_time - mtime
+                    if age_seconds > retention_seconds:
+                        print(f"Cleaning up old repo: {item.name}")
+                        shutil.rmtree(item)
+                except Exception as e:
+                    print(f"Failed to cleanup {item.name}: {e}")
+        RepoManager._last_cleanup_time = current_time
+        print("Cleanup completed")
 
     def clean_up(self, repo_path):
         """Clean up cloned repository directory"""
@@ -86,4 +113,3 @@ class RepoManager:
 
         if repo_path.exists():
             shutil.rmtree(repo_path)
-

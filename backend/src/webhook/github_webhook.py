@@ -52,6 +52,7 @@ async def process_webhook_background(
 ):
     """Process webhook in background to avoid timeout"""
     try:
+        repo_manager.cleanup_old_repos()
         pr = payload.get("pull_request", {})
         repo = payload.get("repository", {})
         installation_id = payload.get("installation", {}).get("id")
@@ -282,13 +283,6 @@ async def process_webhook_background(
         print(f"Error processing webhook: {str(e)}")
         import traceback
         traceback.print_exc()
-    # finally:
-          # Always cleanup the cloned repository
-    #     try:
-    #         if 'repo_path' in locals() and repo_path:
-    #             repo_manager.clean_up(repo_path)
-    #     except Exception as e:
-    #         print(f"Error cleaning up repository: {e}")
 
 
 @router.post("/webhook")
