@@ -1,4 +1,4 @@
-from qdrant_client.models import Distance, VectorParams, PayloadSchemaType
+from qdrant_client.models import Distance, VectorParams, PayloadSchemaType, QuantizationConfig, ScalarQuantization, ScalarType
 
 from utils.qdrant_client import qdrant_client
 
@@ -28,6 +28,13 @@ def initialize_collections():
                 collection_name=collection_name,
                 vectors_config=VectorParams(
                     size=config["vector_size"], distance=Distance.COSINE
+                ),
+                quantization_config=QuantizationConfig(
+                    scalar=ScalarQuantization(
+                        type=ScalarType.INT8,
+                        quantile=0.99,
+                        always_ram=True
+                    )
                 ),
                 shard_number=6,
                 replication_factor=2,
