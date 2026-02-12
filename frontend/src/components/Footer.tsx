@@ -74,7 +74,7 @@ export default function Footer() {
                   </p>
                   <div className="flex space-x-3 pb-4 md:pb-0">
                     <a
-                      href="www.linkedin.com/in/krishna525"
+                      href="https://linkedin.com/in/krishna525"
                       className="hover:transform hover:scale-110 transition-transform duration-300"
                     >
                       <div className="w-12 h-12 md:w-14 md:h-14 relative">
